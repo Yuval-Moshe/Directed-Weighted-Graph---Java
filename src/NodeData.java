@@ -14,6 +14,14 @@ public class NodeData implements node_data {
         _tag = 0;
     }
 
+    public NodeData(int key, geo_location gl){
+        _key = key;
+        _gl = new Point3D(gl.x(),gl.y(),gl.z());
+        _weight = 0;
+        _info = "";
+        _tag = 0;
+    }
+
     @Override
     public int getKey() {
         return _key;
