@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+
 public class DWGraph_DS implements directed_weighted_graph {
 
     private HashMap<Integer, node_data> _nodes;
@@ -60,7 +61,6 @@ public class DWGraph_DS implements directed_weighted_graph {
         _edges_fromNode.put(n.getKey(), curr_edges_fromTo);
         _edges_toNode.put(n.getKey(),curr_edges_toFrom);
         _mc++;
-
     }
 
     @Override
@@ -111,7 +111,7 @@ public class DWGraph_DS implements directed_weighted_graph {
 
     @Override
     public edge_data removeEdge(int src, int dest) {
-        edge_data edge = _edges_fromNode.get(src).get(dest);
+        edge_data edge = getEdge(src, dest);
         if(edge!=null) {
             _edges_fromNode.get(src).remove(dest);
             _edges_toNode.get(dest).remove(src);
@@ -135,5 +135,15 @@ public class DWGraph_DS implements directed_weighted_graph {
     @Override
     public int getMC() {
         return _mc;
+    }
+
+    public String toString (){
+        String s="";
+        for(node_data node : _nodes.values()){
+            for(edge_data ni : getE(node.getKey())){
+                s+=ni.getSrc() + " and "+ ni.getDest() + " are connected by: "+ni.getWeight()+"\n";
+            }
+        }
+        return s;
     }
 }

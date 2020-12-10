@@ -4,6 +4,8 @@ import org.w3c.dom.Node;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -145,24 +147,50 @@ public class DWGraph_Algo implements dw_graph_algorithms {
             }
         }
         return path;
-
-
     }
 
     @Override
     public boolean save(String file) {
-        return false;
+        Gson gson = new Gson();
+        JsonArray Edges = new JsonArray();
+        JsonArray Nodes = new JsonArray();
+        for(node_data node : _dwg.getV()){
+            JsonObject curr_node = new JsonObject();
+            String curr_position = node.getLocation().x()+", "+node.getLocation().y()+", "+node.getLocation().z();
+            curr_node.addProperty("pos", curr_position);
+            curr_node.addProperty("id", node.getKey());
+            Nodes.add(curr_node);
+            for(edge_data edge : _dwg.getE(node.getKey())){
+                JsonObject curr_edge = new JsonObject();
+                curr_edge.addProperty("src", edge.getSrc());
+                curr_edge.addProperty("w", edge.getWeight());
+                curr_edge.addProperty("dest", edge.getDest());
+                Edges.add(curr_edge);
+            }
+        }
+        JsonObject json = new JsonObject();
+        json.add("Edges", Edges);
+        json.add("Nodes", Nodes);
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(json.toString());
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
     public boolean load(String file) {
-
         Gson gson = new Gson();
         JsonObject jsonObject = new JsonObject();
         try {
             jsonObject = gson.fromJson(new FileReader(file), JsonObject.class);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
         }
 
         directed_weighted_graph graph = new DWGraph_DS();
@@ -179,7 +207,6 @@ public class DWGraph_Algo implements dw_graph_algorithms {
                     graph.addNode(node);
                 }
                 else {
-                    System.out.println("Wrong in Nodes");
                     return false;
                 }
             }
@@ -193,13 +220,12 @@ public class DWGraph_Algo implements dw_graph_algorithms {
                     graph.connect(src, dest, weight);
                 }
                 else{
-                    System.out.println("Wrong in Edges");
                     return false;
                 }
             }
+            _dwg=graph;
         }
         else{
-            System.out.println("Wrong from the Begining!");
             return false;
         }
         return true;
