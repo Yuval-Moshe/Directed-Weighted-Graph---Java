@@ -20,6 +20,7 @@ public class Ex2 implements Runnable{
 
     @Override
     public void run() {
+        int count = 0;
         int scenario_num = 23;
         game_service game = Game_Server_Ex2.getServer(scenario_num); // you have [0,23] games
         //	int id = 999;
@@ -36,6 +37,12 @@ public class Ex2 implements Runnable{
 
         while(game.isRunning()) {
             moveAgants(game);
+//            if (count < 200) {
+//                if (count%2 == 0) {
+//                    moveAgants(game);
+//                }
+//            }
+//            else moveAgants(game);
             try {
                 if(ind%1==0) {_frame.repaint();}
                 Thread.sleep(dt);
@@ -44,6 +51,7 @@ public class Ex2 implements Runnable{
             catch(Exception e) {
                 e.printStackTrace();
             }
+            count++;
         }
         String res = game.toString();
 
@@ -57,105 +65,115 @@ public class Ex2 implements Runnable{
      * @param
      */
     private static void moveAgants(game_service game) {
-        counter++;
-        String lg = game.move();
         directed_weighted_graph graph = _arena.getGraph();
-        List<CL_Agent> agents_list = Arena.getAgents(lg, graph);
-        _arena.setAgents(agents_list);
-        String pokemons_string =  game.getPokemons();
-        List<CL_Pokemon> pokemons_list = Arena.json2Pokemons(pokemons_string);
-        _arena.setPokemons(pokemons_list);
-        for(int a = 0; a< _arena.getPokemons().size(); a++) {
-            gameClient.Arena.updateEdge(_arena.getPokemons().get(a),graph);
-        }
+        List<CL_Agent> curr_agents = Arena.getAgents(game.getAgents(), graph);
+        boolean flagA = false;
+//        for (CL_Agent agent : curr_agents) {
+//            if (agent.getNextNode() == -1 || agent.getNextNode() == -2) {
+//                flagA = true;
+//            }
+//        }
 
-        dw_graph_algorithms dwq = new DWGraph_Algo();
-        dwq.init(graph);
-        CL_Agent [] pokemons_index_arr = new CL_Agent[pokemons_list.size()];
-        List<CL_Pokemon> not_defined_pokemons = new ArrayList<>();
-        for(int i=0; i<agents_list.size(); i++){
-            int agent_src = agents_list.get(i).getSrcNode();
-            for(int j=0; j<pokemons_list.size(); j++) {
-                CL_Pokemon curr_pokemon = pokemons_list.get(j);
-                int pokemon_src = curr_pokemon.get_edge().getSrc();
-                if (_arena._nodes_dist.get(agent_src).get(pokemon_src) != null) {
-                    if (_arena._nodes_dist.get(agent_src).get(pokemon_src) < _arena._avg_dist) {
-                        if (pokemons_index_arr[j] == null) {
-                            pokemons_index_arr[j] = agents_list.get(i);
-                        }
-                        else {
-                            if (pokemons_index_arr[j].getSrcNode() != pokemon_src) {
-                                double agent_to_pokemon = _arena._nodes_dist.get(agent_src).get(pokemon_src);
-                                double curr_agent_to_pokemon = _arena._nodes_dist.get(pokemons_index_arr[j].getSrcNode()).get(pokemon_src);
-                                if (agent_to_pokemon < curr_agent_to_pokemon) {
-                                    pokemons_index_arr[j] = agents_list.get(i);
+        if (flagA) {
+            counter++;
+            String lg = game.move();
+            List<CL_Agent> agents_list = Arena.getAgents(lg, graph);
+            _arena.setAgents(agents_list);
+            String pokemons_string = game.getPokemons();
+            List<CL_Pokemon> pokemons_list = Arena.json2Pokemons(pokemons_string);
+            _arena.setPokemons(pokemons_list);
+            for (int a = 0; a < _arena.getPokemons().size(); a++) {
+                gameClient.Arena.updateEdge(_arena.getPokemons().get(a), graph);
+            }
+
+            dw_graph_algorithms dwq = new DWGraph_Algo();
+            dwq.init(graph);
+            CL_Agent[] pokemons_index_arr = new CL_Agent[pokemons_list.size()];
+            for (int i = 0; i < agents_list.size(); i++) {
+                int agent_src = agents_list.get(i).getSrcNode();
+                for (int j = 0; j < pokemons_list.size(); j++) {
+                    CL_Pokemon curr_pokemon = pokemons_list.get(j);
+                    int pokemon_src = curr_pokemon.get_edge().getSrc();
+                    if (_arena._nodes_dist.get(agent_src).get(pokemon_src) != null) {
+                        if (_arena._nodes_dist.get(agent_src).get(pokemon_src) < _arena._avg_dist) {
+                            if (pokemons_index_arr[j] == null) {
+                                pokemons_index_arr[j] = agents_list.get(i);
+                            } else {
+                                if (pokemons_index_arr[j].getSrcNode() != pokemon_src) {
+                                    double agent_to_pokemon = _arena._nodes_dist.get(agent_src).get(pokemon_src);
+                                    double curr_agent_to_pokemon = _arena._nodes_dist.get(pokemons_index_arr[j].getSrcNode()).get(pokemon_src);
+                                    if (agent_to_pokemon < curr_agent_to_pokemon) {
+                                        pokemons_index_arr[j] = agents_list.get(i);
+                                    }
                                 }
                             }
                         }
-                    }
-                }
-                else{
-                    if(agent_src==pokemon_src){
-                        pokemons_index_arr[j] = agents_list.get(i);
-                    }
-                }
-
-            }
-        }
-        List<CL_Agent> not_defined_agents = new ArrayList<>();
-        for(int k=0; k<agents_list.size();k++) {
-            boolean flag = false;
-            CL_Agent curr_agent = agents_list.get(k);
-            int closest_pokemon=-1;
-            for (int i = 0; i < pokemons_index_arr.length; i++) {
-                double min_dist = Double.POSITIVE_INFINITY;
-                if (pokemons_index_arr[i] == curr_agent) {
-                    if(curr_agent.getSrcNode()==pokemons_list.get(i).get_edge().getSrc()){
-                        min_dist=0;
-                        closest_pokemon=pokemons_list.get(i).get_edge().getDest();
-                        flag = true;
-                    }
-                    else {
-                        flag = true;
-                        CL_Pokemon curr_pokemon = pokemons_list.get(i);
-                        double curr_dist = _arena._nodes_dist.get(curr_agent.getSrcNode()).get(curr_pokemon.get_edge().getSrc());
-                        if (curr_dist < min_dist) {
-                            min_dist = curr_dist;
-                            closest_pokemon = curr_pokemon.get_edge().getSrc();
+                    } else {
+                        if (agent_src == pokemon_src) {
+                            pokemons_index_arr[j] = agents_list.get(i);
                         }
                     }
                 }
+            }
 
+            List<CL_Agent> not_defined_agents = new ArrayList<>();
+            List<CL_Pokemon> not_defined_pokemons = new ArrayList<>();
+
+            for (int k = 0; k < agents_list.size(); k++) {
+                boolean flag = false;
+                CL_Agent curr_agent = agents_list.get(k);
+                int closest_pokemon = -1;
+                for (int i = 0; i < pokemons_index_arr.length; i++) {
+                    double min_dist = Double.POSITIVE_INFINITY;
+                    if (pokemons_index_arr[i] == curr_agent) {
+                        flag = true;
+                        if (curr_agent.getSrcNode() == pokemons_list.get(i).get_edge().getSrc()) {
+                            min_dist = 0;
+                            closest_pokemon = pokemons_list.get(i).get_edge().getDest();
+                        } else {
+                            CL_Pokemon curr_pokemon = pokemons_list.get(i);
+                            double curr_dist = _arena._nodes_dist.get(curr_agent.getSrcNode()).get(curr_pokemon.get_edge().getSrc());
+                            if (curr_dist < min_dist) {
+                                min_dist = curr_dist;
+                                closest_pokemon = curr_pokemon.get_edge().getSrc();
+                            }
+                        }
+                    }
+
+                }
+                if (flag) {
+                    List<node_data> shortestPath = dwq.shortestPath(curr_agent.getSrcNode(), closest_pokemon);
+                    game.chooseNextEdge(curr_agent.getID(), shortestPath.get(1).getKey());
+                    System.out.println("Counter: " + counter + ", Optimize: Agent :" + curr_agent.getID() + ", Dest is:" + curr_agent.getNextNode() + " , Real Dest is: " + shortestPath.get(1).getKey());
+                    int real_key = curr_agent.getNextNode();
+                } else {
+                    not_defined_agents.add(curr_agent);
+                }
             }
-            if(flag) {
-                List<node_data> shortestPath = dwq.shortestPath(curr_agent.getSrcNode(), closest_pokemon);
-                game.chooseNextEdge(curr_agent.getID(), shortestPath.get(1).getKey());
-                System.out.println("Counter: "+counter+", Optimize: Agent :"+ curr_agent.getID()+", Dest is:"+curr_agent.getNextNode()+ " , Real Dest is: "+shortestPath.get(1).getKey());
-                int real_key = curr_agent.getNextNode();
+            for (int i = 0; i < pokemons_index_arr.length; i++) {
+                if (pokemons_index_arr[i] == null) {
+                    not_defined_pokemons.add(pokemons_list.get(i));
+                }
             }
-            else{
-                not_defined_agents.add(curr_agent);
-            }
-        }
-        for (int i = 0; i < pokemons_index_arr.length; i++) {
-            if(pokemons_index_arr[i]==null){
-                not_defined_pokemons.add(pokemons_list.get(i));
-            }
-        }
 
 
-        for(int i=0; i<not_defined_agents.size(); i++) {
-            CL_Agent agent = not_defined_agents.get(i);
-            int id = agent.getID();
-            int dest = agent.getNextNode();
-            int src = agent.getSrcNode();
-            double v = agent.getValue();
-            if(dest==-1) {
-                dest = nextNode(graph, src, not_defined_pokemons);
-                game.chooseNextEdge(agent.getID(), dest);
-                int real_key = agent.getNextNode();
-                System.out.println("Agent :"+ agent.getID()+", Dest is:"+agent.getNextNode()+ " , Real Dest is: "+dest);
-                System.out.println("Agent: "+id+", val: "+v+"   turned to node: "+dest);
+            for (int i = 0; i < not_defined_agents.size(); i++) {
+                CL_Agent agent = not_defined_agents.get(i);
+                int id = agent.getID();
+                int dest = agent.getNextNode();
+                int src = agent.getSrcNode();
+                double v = agent.getValue();
+                if (dest == -1) {
+                    int[] arr = nextNode(graph, src, not_defined_pokemons);
+                    if (arr[1] != -1) {
+                        game.chooseNextEdge(agent.getID(), arr[0]);
+                        not_defined_pokemons.remove(arr[1]);
+                        int real_key = agent.getNextNode();
+                    }
+
+                    System.out.println("Agent :" + agent.getID() + ", Dest is:" + agent.getNextNode() + " , Real Dest is: " + dest);
+                    System.out.println("Agent: " + id + ", val: " + v + "   turned to node: " + dest);
+                }
             }
         }
     }
@@ -165,30 +183,33 @@ public class Ex2 implements Runnable{
      * @param src
      * @return
      */
-    private static int nextNode(directed_weighted_graph g, int src, List<CL_Pokemon> pokemons_list) {
+    private static int [] nextNode(directed_weighted_graph g, int src, List<CL_Pokemon> not_defined_pokemons) {
 
         dw_graph_algorithms graph_algo = new DWGraph_Algo();
         graph_algo.init(g);
         double min_dist = Double.POSITIVE_INFINITY;
         int ans=-1;
-        for (CL_Pokemon pokemon : pokemons_list) {
+        int index = -1;
+        for (int i=0; i< not_defined_pokemons.size(); i++) {
+            CL_Pokemon pokemon = not_defined_pokemons.get(i);
             double shortest_path_dist = graph_algo.shortestPathDist(src, pokemon.get_edge().getSrc());
             if (shortest_path_dist == 0){
                 System.out.println("This is the Answer:" + pokemon.get_edge().getDest());
                 ans = pokemon.get_edge().getDest();
-                HashMap<Integer, Double> map = new HashMap<>();
-                map.put(src, g.getEdge(src,ans).getWeight());
-                return ans;
+                int[] arr = {ans, i};
+                return arr;
             }
             else if (shortest_path_dist < min_dist && shortest_path_dist!=-1) {
                 min_dist = shortest_path_dist;
+                index = i;
                 List<node_data> shortest_path = graph_algo.shortestPath(src, pokemon.get_edge().getSrc());
                 node_data next_node = shortest_path.get(1);
                 ans = next_node.getKey();
             }
         }
         System.out.println("This is the final Answer:" + ans);
-        return ans;
+        int[] arr = {ans, index};
+        return arr;
     }
 
     private void init(game_service game) {
@@ -243,7 +264,8 @@ public class Ex2 implements Runnable{
                 _arena._nodes_dist.put(curr_key, curr_dist_from_nodes);
             }
             if(numOfConnection>0){
-                _arena._avg_dist = sum_dist/(numOfConnection*2);}
+                _arena._avg_dist = sum_dist/(numOfConnection*2);
+            }
             System.out.println(_arena._nodes_dist.toString());
             System.out.println(_arena._avg_dist);
 //            HashMap<Integer,  Double> avg_dist_from_all_pokemons = new HashMap<>();
