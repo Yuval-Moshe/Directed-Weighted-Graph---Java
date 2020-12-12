@@ -1,12 +1,12 @@
+package api;
+
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
-import org.w3c.dom.Node;
+import gameClient.util.Point3D;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 
 public class DWGraph_Algo implements dw_graph_algorithms {
@@ -81,7 +81,16 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        List<node_data> path = shortestPath(src, dest);
+        if(!path.isEmpty()){
+            double length=0;
+            for(int i=0; i<path.size()-1; i++){
+                length+=_dwg.getEdge(path.get(i).getKey(), path.get(i+1).getKey()).getWeight();
+            }
+            return length;
+        }
+        return -1;
+
     }
 
     @Override

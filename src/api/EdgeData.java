@@ -1,3 +1,5 @@
+package api;
+
 public class EdgeData implements edge_data {
 
     private int _src;

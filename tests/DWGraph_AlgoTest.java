@@ -1,10 +1,10 @@
+import api.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-/** Test Class for DWGraph_Algo
+/** Test Class for api.DWGraph_Algo
  * List of all the test in this Test class:
  * basicFunctions():
  * init() -
@@ -208,6 +208,35 @@ class DWGraph_AlgoTest {
     }
     @Test
     void save() {
+        directed_weighted_graph dwg = new DWGraph_DS();
+        dw_graph_algorithms ga = new DWGraph_Algo();
+        int first_key =0;
+        for(int i=0; i<6; i++){
+            node_data node = new NodeData();
+            dwg.addNode(node);
+            if(i==0){
+                first_key = dwg.getV().iterator().next().getKey();
+            }
+        }
+        dwg.connect(first_key+0,first_key+1,2);
+        dwg.connect(first_key+1,first_key+0,1);
+        dwg.connect(first_key+1,first_key+3,3);
+        dwg.connect(first_key+1,first_key+2,8);
+        dwg.connect(first_key+1,first_key+5,10);
+        dwg.connect(first_key+2,first_key+1,1);
+        dwg.connect(first_key+2,first_key+4,3);
+        dwg.connect(first_key+3,first_key+0,1);
+        dwg.connect(first_key+3,first_key+1,1);
+        dwg.connect(first_key+3,first_key+4,2);
+        dwg.connect(first_key+4,first_key+5,2);
+        ga.init(dwg);
+        ga.save("data\\A6");
+        dw_graph_algorithms ga2 = new DWGraph_Algo();
+        ga2.load("data\\A6");
+        assertEquals(ga.getGraph().toString(),ga2.getGraph().toString());
+
+
+
 
     }
 

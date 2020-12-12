@@ -1,3 +1,7 @@
+package api;
+
+import gameClient.util.Point3D;
+
 public class NodeData implements node_data {
     private static int counter = 0;
     private int _key;

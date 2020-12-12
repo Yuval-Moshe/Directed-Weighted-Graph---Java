@@ -1,5 +1,7 @@
+package gameClient.util;
+//import api.geo_location;
 
-//import geo_location;
+import api.geo_location;
 
 import java.io.Serializable;
 

@@ -1,3 +1,5 @@
+package api;
+
 import java.io.Serializable;
 /**
  * This interface represents the main functionality of the game-server, allowing a User the following:

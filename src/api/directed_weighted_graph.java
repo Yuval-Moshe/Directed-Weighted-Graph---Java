@@ -1,3 +1,5 @@
+package api;
+
 import java.util.Collection;
 /**
  * This interface represents a directional weighted graph.
@@ -10,9 +12,9 @@ import java.util.Collection;
 
 public interface directed_weighted_graph {
     /**
-     * returns the node_data by the node_id,
+     * returns the api.node_data by the node_id,
      * @param key - the node_id
-     * @return the node_data by the node_id, null if none.
+     * @return the api.node_data by the node_id, null if none.
      */
     public node_data getNode(int key);
     /**
@@ -24,7 +26,7 @@ public interface directed_weighted_graph {
      */
     public edge_data getEdge(int src, int dest);
     /**
-     * adds a new node to the graph with the given node_data.
+     * adds a new node to the graph with the given api.node_data.
      * Note: this method should run in O(1) time.
      * @param n
      */
@@ -41,7 +43,7 @@ public interface directed_weighted_graph {
      * This method returns a pointer (shallow copy) for the
      * collection representing all the nodes in the graph.
      * Note: this method should run in O(1) time.
-     * @return Collection<node_data>
+     * @return Collection<api.node_data>
      */
     public Collection<node_data> getV();
     /**
@@ -49,7 +51,7 @@ public interface directed_weighted_graph {
      * collection representing all the edges getting out of
      * the given node (all the edges starting (source) at the given node).
      * Note: this method should run in O(k) time, k being the collection size.
-     * @return Collection<edge_data>
+     * @return Collection<api.edge_data>
      */
     public Collection<edge_data> getE(int node_id);
     /**

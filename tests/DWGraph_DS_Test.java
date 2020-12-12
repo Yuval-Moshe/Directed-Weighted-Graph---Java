@@ -1,3 +1,4 @@
+import api.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -5,7 +6,7 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-    /** Test Class for DWGraph_DS
+    /** Test Class for api.DWGraph_DS
      * List of all the test in this Test class:
      * basicFunctions():
      *  - Test 1.1 - adding 100 nodes:   getNode(i)!=null, nodeSize()=100, edgeSize()=O;
