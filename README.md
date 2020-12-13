@@ -3,18 +3,25 @@
 #### Background .<br />
 
 This project is divided into 2 parts:.<br />
-First part - Implementation of an undirected weighted graph with the following classes: .<br />
+
+<ins>First part</ins> - Implementation of an undirected weighted graph with the following classes: .<br />
 NodeData - implements the node_data interface, which is the interface of nodes in an undirected weighted graph. .<br />
 EdgeData - implements the edge_data interface, which is the interface of edges in an undirected weighted graph. .<br />
 DWGraph_DS - implements the directed_weighted_graph interface, which represents the graph itself. .<br />
 DWGraph_Algo - implements the dw_graph_algorithms interface, which allows performing algorithmic queries on a specific graph. .<br />
 The graph was realized by using HashMap data structures, and the operations were written by realizing Diexera algorithm (please see explanation in the algorithm itself). .<br />
-Second part - this part uses the structure and the algorithms that were developed in part one, to realize the "Pokemon Challenge" game, which is beeing played against server.
+<ins>Second part</ins> - this part uses the structure and the algorithms that were developed in part one, to realize the "Pokemon Challenge" game, which is beeing played against server.
 
-In order to run the game:
+In order to run the game follow the nex steps:
 1. First use git clone:
   $ git clone https://github.com/Yuval-Moshe/EX2.git
 2. //need to add a GUI, then explanation how to use.
+    .
+    .
+    .
+   A login window will pop up - you should enter your login id.
+3. After choosing a level (between 0-23) - a visual graph will be shown, there you will be able to follow the agents, the pokemons and their movements (full game explanation is on the Wiki) 
+
 
 
 
