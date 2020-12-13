@@ -1,6 +1,7 @@
 ## README
 
-#### Background .<br />r
+#### Background .<br />
+
 This project is divided into 2 parts:.<br />
 First part - Implementation of an undirected weighted graph with the following classes: .<br />
 NodeData - implements the node_data interface, which is the interface of nodes in an undirected weighted graph. .<br />
