@@ -1,9 +1,6 @@
 ## README
 
-![](https://www.reddit.com/r/pokemon/comments/50bzx2/pok%C3%A9gif_we_made_a_bot_that_finds_relevant_pok%C3%A9mon/)
-
-
-
+<img src="" width="500" height="500" />
 
 #### Background <br />
 
