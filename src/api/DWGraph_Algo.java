@@ -2,32 +2,66 @@ package api;
 
 import com.google.gson.*;
 import gameClient.util.Point3D;
-
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
+/** This class implements the dw_graph_algorithms interface which allows preforming complex algorithms on a
+ * weighted, directed graph, with the following class variables:
+ * directed_weighted_graph _dwg - the graph to preform the algorithms on.
+ *  **/
+
 public class DWGraph_Algo implements dw_graph_algorithms {
     directed_weighted_graph _dwg;
 
+    /**
+     * Initialize the graph to work on the provided weighted graph parameter
+     * @param g - directed weighted graph
+     * @return
+     */
     @Override
     public void init(directed_weighted_graph g) {
         _dwg = g;
     }
 
+    /**
+     * Returns the weighted graph in this directed weighted graph algorithm's as _dwg.
+     * @param
+     * @return directed weighted graph
+     */
     @Override
     public directed_weighted_graph getGraph() {
         return _dwg;
     }
 
+    /** Returns a deep copy of this graph by sending him to a copy constructor of the DWGraph_DS class
+     * @param
+     * @return g - the copied directed_weighted_graph.
+     */
     @Override
     public directed_weighted_graph copy() {
         directed_weighted_graph g = new DWGraph_DS(_dwg);
         return g;
     }
 
+     /**
+      * This function checks if the current directed_weighted_graph of this dw_graph_algorithms is a strongly connected graph, meaning if
+      * for each 2 nodes in  the graph , node_a and node_b, there is a path from node_a to node_b, and a path from node_b to node_a.
+      * The base assumption behind this function is this: if a directed weighted graph is a strongly connected graph, the following behaviour should happen:
+      * when picking a random node in the graph (node_rnd) there should be a path from node_rnd to each other node in the graph, then, if you'll
+      * reverse the graph (meaning, that for each edge from node_a to node_b in the graph, an edge from node_b to node_a will be
+      * in the reversed graph), and if there is a path between node_rnd to each other node in the reversed graph as well - than the graph is
+      * a strongly connected directed weighted graph,because then it will state that in the original graph, there is a path from each node to node_rnd.
+      * So, the functions takes a random node, and adds to a HashMap all the nodes which are connected to him in some path, by preforming
+      * the BFS algorithm.then, the functions build the reversed graph as described, and preform the same BFS algorithm. If the number of connected
+      * nodes to node_rnd in the original graph is equal number of connected nodes to node_rnd in the reversed graph, and both are equals to the
+      * number of all the nodes in the graph hence all the nodes are connected to the random node we chose, and therefore there is a path between
+      * each 2 nodes in the graph, and the graph is strongly connected.
+      * @param
+      * @return True - if the graph is a  strongly connected graph, False - if it's not.
+      */
     @Override
     public boolean isConnected() {
         boolean flag = false;
@@ -79,6 +113,14 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 
     }
 
+    /**
+     * Returns the shortest path distance between src and dest, by first preforming the shortestPath function between src and dest,
+     * then if the returned List is empty, there is no path between src and dest and return -1, if the List isn't empty, go over all
+     * the nodes in the list and add the sum of there edges weight (length=+getEdge(i,i+1), for each 0<i<n-1, n=shortestPath_list.size()).
+     * @param src
+     * @param dest
+     * @return -1 if there is no path, else return the length of the shortest path.
+     */
     @Override
     public double shortestPathDist(int src, int dest) {
         List<node_data> path = shortestPath(src, dest);
@@ -93,6 +135,40 @@ public class DWGraph_Algo implements dw_graph_algorithms {
 
     }
 
+    /**
+     * This function returns the shortest path between 2 nodes in a directed, weighted graph by preforming the Dijkstra() algorithm
+     * function and the reconstructPath() function.
+     * Dijkstra:
+     * Initialization:
+     *      - min_dist HashMap - which will hold for each node in the graph, the shortest path distance between him and the src node.
+     *      - a priority queue pq, which is prioritized by the min_dist value of each node (using a NodeDataComp comparator class which built for the implementation
+     *      of this functions and is implemented at the bottom of this class as a private inner class), and will be used to store the next node in the graph to check.
+     *      - a Double var, dist to Infinity, which will store the current shortest distance from src to dest.
+     *      - Visited Hashset, which will store all the already visited nodes
+     *      - prev Hashmap the map the parent of each node which is the closest (by path weight) to the src node.
+     * The steps:
+     * - put src in min_dist, map him with the distance of 0, and add him to pq.
+     * - Start going over the pq until empty, extract the head (marked as curr) of the pq and go over is neighbors (if his not already visited).
+     * - For each neighbor, define the current distance from src (in the path that goes through curr), and check if the current distance
+     * is shortest then the current shortest distance from src to path, if not - there is no point to continue with this neighbor.
+     * - If so, check if the current neighbor is the dest node, if so, replace distance var with the ni_dist_from_src var.
+     * - Check if the current neighbor as a parent node marked in the prev Hashmap,  if not - set curr as his parent and change the
+     * map the neighbor's key to ni_dist_from_src in min_dist, if is does have a parent node, change the parent node and the min_dist value of the neighbor only if
+     * ni_dist_from_src is smaller than the current mapped value to his key in the min_dist Hashmap.
+     * - Add the neighbor to the pq.
+     * Go thorough this process for each edge in the graph until the pq is empty and return the prev hashmap.
+     *
+     * reconstructPath:
+     * This function takes the prev HashMap from the solve function and the src and dest nodes,
+     * and is trying to construct a path between dest to src (the reversed way) by adding to a list the prev of dest,
+     * and then the prev of the prev of dest, and so on, until it reached the src node, if it does - its the shortest path
+     * between src and dest, if it can't reach the src node - there is no path between src and dest.
+     * The function ends by reversing the path (constructed as an ArrayList) to make if from src to dest and not
+     * dest to src.
+     * @param src
+     * @param dest
+     * @return a list of nodes representing the shortest path from src to dest, if there isn't any return an empty list.
+     * **/
     @Override
     public List<node_data> shortestPath(int src, int dest) {
         node_data src_node = _dwg.getNode(src);
@@ -158,6 +234,12 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         return path;
     }
 
+    /**
+     * Saves the current directed_weighted_graph of this dw_graph_algorithms in json format to the provided file location represented by
+     * the fle param
+     * @param file
+     * @return true if the file was successfully saved to the file, false otherwise.
+     */
     @Override
     public boolean save(String file) {
         Gson gson = new Gson();
@@ -191,6 +273,12 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         return true;
     }
 
+    /**
+     * Loads a directed_weighted_graph from the provided location (in the file param) and if is successfully loaded, initializes the
+     * directed_weighted_graph of this dw_graph_algorithms to be the loaded graph
+     * @param file
+     * @return true if successfully loaded and initialized, false otherwise.
+     */
     @Override
     public boolean load(String file) {
         Gson gson = new Gson();
@@ -241,14 +329,22 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     }
 
 
-    public class NodeDataComp implements Comparator<node_data>{
-        HashMap<Integer, Double> _minDist;
+    /**
+     * A private  Comparator class for the implementation of shortestPath()
+     * **/
+    private class NodeDataComp implements Comparator<node_data>{
+        private HashMap<Integer, Double> _minDist;
 
         public NodeDataComp (HashMap<Integer, Double> minDist){
             _minDist=minDist;
         }
 
-
+        /**
+         *
+         * @param o1
+         * @param o2
+         * @return
+         */
         @Override
         public int compare(node_data o1, node_data o2) {
             if(_minDist.get(o1.getKey())<_minDist.get(o2.getKey())){
