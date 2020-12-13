@@ -9,7 +9,7 @@ public class CL_Pokemon {
     private int _type;
     private Point3D _pos;
     private double min_dist;
-    private int min_ro;
+    private CL_Agent _curr_agent;
 
     public CL_Pokemon(Point3D p, int t, double v, double s, edge_data e) {
         _type = t;
@@ -18,7 +18,7 @@ public class CL_Pokemon {
         set_edge(e);
         _pos = p;
         min_dist = -1;
-        min_ro = -1;
+        _curr_agent = null;
     }
     public static CL_Pokemon init_from_json(String json) {
         CL_Pokemon ans = null;
@@ -56,11 +56,11 @@ public class CL_Pokemon {
         this.min_dist = mid_dist;
     }
 
-    public int getMin_ro() {
-        return min_ro;
+    public CL_Agent get_curr_agent() {
+        return _curr_agent;
     }
 
-    public void setMin_ro(int min_ro) {
-        this.min_ro = min_ro;
+    public void set_curr_agent(CL_Agent _curr_agent) {
+        this._curr_agent = _curr_agent;
     }
 }
