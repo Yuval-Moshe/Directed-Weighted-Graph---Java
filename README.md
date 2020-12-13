@@ -25,9 +25,8 @@ In order to run the game:
  
 ##### Example:
  
- ![](https://i0.wp.com/algorithms.tutorialhorizon.com/files/2018/03/Weighted-Graph.png?ssl=1)
  
- (![dw_graph_image](https://user-images.githubusercontent.com/68948784/102025281-8a0af380-3d9f-11eb-8662-b426537caa95.png)
+                   ![dw_graph_image](https://user-images.githubusercontent.com/68948784/102025281-8a0af380-3d9f-11eb-8662-b426537caa95.png
  
 This graph contains 6 nodes and 9 edges (and it is a connected graph).<br />
 shortestPathDist method between node 0 to node 5 will return **14** (4+2+2+6).<br />
