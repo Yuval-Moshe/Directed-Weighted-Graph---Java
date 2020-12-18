@@ -1,7 +1,5 @@
 ## README
 
-<img src="" width="500" height="500" />
-
 #### Background <br />
 
 This project is divided into 2 parts:<br />
