@@ -42,8 +42,11 @@ public class DWGraph_Algo implements dw_graph_algorithms {
      */
     @Override
     public directed_weighted_graph copy() {
-        directed_weighted_graph g = new DWGraph_DS(_dwg);
-        return g;
+        if(_dwg != null) {
+            directed_weighted_graph g = new DWGraph_DS(_dwg);
+            return g;
+        }
+        return null;
     }
 
      /**
@@ -124,7 +127,7 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     @Override
     public double shortestPathDist(int src, int dest) {
         List<node_data> path = shortestPath(src, dest);
-        if(!path.isEmpty()){
+        if(!(path == null)){
             double length=0;
             for(int i=0; i<path.size()-1; i++){
                 length+=_dwg.getEdge(path.get(i).getKey(), path.get(i+1).getKey()).getWeight();
@@ -175,6 +178,9 @@ public class DWGraph_Algo implements dw_graph_algorithms {
         node_data dest_node = _dwg.getNode(dest);
         HashMap<Integer, node_data> prev = Dijkstra(src_node, dest_node);
         List<node_data> path = reconstructPath(prev, src_node, dest_node);
+        if(path.isEmpty()){
+            return null;
+        }
         return path;
     }
 
@@ -357,5 +363,17 @@ public class DWGraph_Algo implements dw_graph_algorithms {
                 return 0;
             }
         }
+    }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DWGraph_Algo that = (DWGraph_Algo) o;
+        return Objects.equals(_dwg, that._dwg);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(_dwg);
     }
 }

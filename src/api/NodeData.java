@@ -29,6 +29,15 @@ public class NodeData implements node_data {
         _tag = 0;
     }
 
+    public NodeData(node_data other){
+        _key = other.getKey();
+        Point3D gl = new Point3D(other.getLocation().x(), other.getLocation().y(), other.getLocation().z());
+        _gl = gl;
+        _weight = other.getWeight();
+        _info = other.getInfo();
+        _tag = other.getTag();
+    }
+
     /**
      * Constructor with provided key and geo_location params
      * @param key - the node's key.
