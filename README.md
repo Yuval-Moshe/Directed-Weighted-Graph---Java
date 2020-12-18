@@ -1,6 +1,6 @@
 ## README
 
-#### Background <br />
+## Background <br />
 
 This project is divided into 2 parts:<br />
 
