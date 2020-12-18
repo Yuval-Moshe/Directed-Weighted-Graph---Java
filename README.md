@@ -17,11 +17,11 @@ In order to gain more specific imformation on how to run this project please vie
 - [How to run - First Part](https://github.com/Yuval-Moshe/Ex2/wiki/How-To-Run---Weighted-&-Directed-Graph)
 - [How to run - Second Part](https://github.com/Yuval-Moshe/Ex2/wiki/How-To-Run---Pokemon-Game)
 
-### Definitions
+## Definitions
  * *directed graph - a set of nodes that are connected together, where all the edges are directed from one vertex to another*
  * *weighted graph - edges have weight*
  
-### Example:
+## Example:
  
 ![dw_graph_image](https://user-images.githubusercontent.com/68948784/102025281-8a0af380-3d9f-11eb-8662-b426537caa95.png)
  
