@@ -25,9 +25,10 @@ In order to gain more specific imformation on how to run this project please vie
  
 ![dw_graph_image](https://user-images.githubusercontent.com/68948784/102025281-8a0af380-3d9f-11eb-8662-b426537caa95.png)
  
-This graph contains 6 nodes and 9 edges (and it is a connected graph).<br />
-shortestPathDist method between node 0 to node 5 will return **14** (4+2+2+6).<br />
-shortestPath method between node 0 to node 5 will return the list **{0,1,3,4,5}**.<br />
+**This graph contains 6 nodes and 9 edges.**
+- isConnected() function will return **false** - the graph is not a strongly connected graph (no path from node 5 to any other node).<br />
+- shortestPathDist method between node 0 to node 5 will return **14** (4+2+2+6).<br />
+- shortestPath method between node 0 to node 5 will return the list **{0,1,3,4,5}**.<br />
 Do notice that the shortest path depends on the sum of the weights of the edges between the 2 nodes
 and not on the sum of the nodes between 2 nodes.
 
