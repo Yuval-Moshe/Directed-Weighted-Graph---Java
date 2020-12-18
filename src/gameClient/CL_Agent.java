@@ -4,63 +4,84 @@ import api.directed_weighted_graph;
 import api.edge_data;
 import api.geo_location;
 import api.node_data;
-import gameClient.CL_Pokemon;
 import gameClient.util.Point3D;
 import org.json.JSONObject;
 
-public class CL_Agent {
-    public static final double EPS = 0.0001;
-    private static int _count = 0;
-    private static int _seed = 3331;
+/**
+ * This class was taken from https://github.com/simon-pikalov/Ariel_OOP_2020/blob/master/Assignments/Ex2/src/gameClient/CL_Agent.java
+ * and was modified and improved regarding our implementation.
+ * This class represents agents in a graph, when each agent contains:
+ *  - _id - agent's unique id
+ *  - _pos - agent's geo location
+ *  - _speed - agent's speed
+ *  - _curr_edge - the current edge where the agent is on at the moment
+ *  - _curr_node - the source of the _curr_edge
+ *  - _gg - the directed weighted graph
+ *  - _value - value of the agent (depends on the pokemon he ate in the graph)
+ */
+public class CL_Agent{
     private int _id;
-    //	private long _key;
     private geo_location _pos;
     private double _speed;
     private edge_data _curr_edge;
     private node_data _curr_node;
     private directed_weighted_graph _gg;
-    private CL_Pokemon _curr_fruit;
-    private long _sg_dt;
-
     private double _value;
 
 
+    /**
+     * Constructor
+     */
     public CL_Agent(directed_weighted_graph g, int start_node) {
         _gg = g;
-        setMoney(0);
+        setValue(0);
         this._curr_node = _gg.getNode(start_node);
         _pos = _curr_node.getLocation();
         _id = -1;
         setSpeed(0);
     }
+
+    /**
+     * This method updates an agent by extracting its data from a given string.
+     * @param json - string with agent's data
+     */
     public void update(String json) {
         JSONObject line;
         try {
-            // "GameServer":{"graph":"A0","pokemons":3,"agents":1}}
             line = new JSONObject(json);
-            JSONObject ttt = line.getJSONObject("Agent");
-            int id = ttt.getInt("id");
+            JSONObject json_object = line.getJSONObject("Agent");
+            int id = json_object.getInt("id");
             if(id==this.getID() || this.getID() == -1) {
                 if(this.getID() == -1) {_id = id;}
-                double speed = ttt.getDouble("speed");
-                String p = ttt.getString("pos");
+                double speed = json_object.getDouble("speed");
+                String p = json_object.getString("pos");
                 Point3D pp = new Point3D(p);
-                int src = ttt.getInt("src");
-                int dest = ttt.getInt("dest");
-                double value = ttt.getDouble("value");
+                int src = json_object.getInt("src");
+                int dest = json_object.getInt("dest");
+                double value = json_object.getDouble("value");
                 this._pos = pp;
                 this.setCurrNode(src);
                 this.setSpeed(speed);
                 this.setNextNode(dest);
-                this.setMoney(value);
+                this.setValue(value);
             }
         }
         catch(Exception e) {
             e.printStackTrace();
         }
     }
-    //@Override
-    public int getSrcNode() {return this._curr_node.getKey();}
+
+    /**
+     * @return agent's current source node's key
+     */
+    public int getSrcNode() {
+        return this._curr_node.getKey();
+    }
+
+    /**
+     * This method returns a string with all agent's data (including id, value, src, dest, speed and pos)
+     * @return a String
+     */
     public String toJSON() {
         int d = this.getNextNode();
         String ans = "{\"Agent\":{"
@@ -74,8 +95,24 @@ public class CL_Agent {
                 + "}";
         return ans;
     }
-    private void setMoney(double v) {_value = v;}
 
+    /**
+     * This method allows set agent current value
+     * @param value - updated agent's value
+     */
+    public void setValue(double value) {
+        _value = value;
+    }
+
+    public double getValue(){
+        return _value;
+    }
+
+    /**
+     * This method allows set agent's next node (its temporal destination node)
+     * @param dest - key of the dest node
+     * @return true if was updated successfully, false if not
+     */
     public boolean setNextNode(int dest) {
         boolean ans = false;
         int src = this._curr_node.getKey();
@@ -83,88 +120,76 @@ public class CL_Agent {
         if(_curr_edge!=null) {
             ans=true;
         }
-        else {_curr_edge = null;}
+        else {
+            _curr_edge = null;
+        }
         return ans;
     }
+
+    /**
+     * This method returns the key of the next agent's node
+     * @return key of the next agent's node - if it is -1, means curr edge is null
+     */
+    public int getNextNode() {
+        if (_curr_edge==null) {
+            return -1;
+        }
+        else {
+            return _curr_edge.getDest();
+        }
+    }
+
+    /**
+     * This method allows set agent's current node (_curr_node variale)
+     * @param src - updated node's key
+     */
     public void setCurrNode(int src) {
         this._curr_node = _gg.getNode(src);
     }
-    public boolean isMoving() {
-        return this._curr_edge!=null;
+
+    public node_data get_curr_node(){
+        return _curr_node;
     }
-    public String toString() {
-        return toJSON();
-    }
-    public String toString1() {
-        String ans=""+this.getID()+","+_pos+", "+isMoving()+","+this.getValue();
-        return ans;
-    }
+
+    /**
+     * @return agent's id (_id variable)
+     */
     public int getID() {
-        // TODO Auto-generated method stub
         return this._id;
     }
 
+    /**
+     * @return agent's geo location (_pos variable)
+     */
     public geo_location getLocation() {
-        // TODO Auto-generated method stub
         return _pos;
     }
 
-
-    public double getValue() {
-        // TODO Auto-generated method stub
-        return this._value;
-    }
-
-
-
-    public int getNextNode() {
-        int ans = -2;
-        if(this._curr_edge==null) {
-            ans = -1;}
-        else {
-            ans = this._curr_edge.getDest();
-        }
-        return ans;
-    }
-
+    /**
+     * @return agent's current speed (_speed variable)
+     */
     public double getSpeed() {
-        return this._speed;
+        return _speed;
     }
 
-    public void setSpeed(double v) {
-        this._speed = v;
-    }
-    public CL_Pokemon get_curr_fruit() {
-        return _curr_fruit;
-    }
-    public void set_curr_fruit(CL_Pokemon curr_fruit) {
-        this._curr_fruit = curr_fruit;
-    }
-    public void set_SDT(long ddtt) {
-        long ddt = ddtt;
-        if(this._curr_edge!=null) {
-            double w = get_curr_edge().getWeight();
-            geo_location dest = _gg.getNode(get_curr_edge().getDest()).getLocation();
-            geo_location src = _gg.getNode(get_curr_edge().getSrc()).getLocation();
-            double de = src.distance(dest);
-            double dist = _pos.distance(dest);
-            if(this.get_curr_fruit().get_edge()==this.get_curr_edge()) {
-                dist = _curr_fruit.getLocation().distance(this._pos);
-            }
-            double norm = dist/de;
-            double dt = w*norm / this.getSpeed();
-            ddt = (long)(1000.0*dt);
-        }
-        this.set_sg_dt(ddt);
+    /**
+     * This method allows set the speed of an agent
+     * @param speed - updated agent's speed
+     */
+    public void setSpeed(double speed) {
+        _speed = speed;
     }
 
-    public edge_data get_curr_edge() {
-        return this._curr_edge;
+    public String toString() {
+        return toJSON();
     }
-    public long get_sg_dt() {
-        return _sg_dt;
+
+    public boolean isMoving() {
+        return this._curr_edge != null;
     }
-    public void set_sg_dt(long _sg_dt) {
-        this._sg_dt = _sg_dt;
+
+    public String toString1() {
+        String ans = "" + this.getID() + "," + _pos + ", " + isMoving() + "," + this.getValue();
+        return ans;
     }
 }

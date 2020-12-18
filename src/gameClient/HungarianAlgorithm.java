@@ -4,10 +4,10 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
+ * This class was taken from outsource - https://github.com/aalmi/HungarianAlgorithm/blob/master/HungarianAlgorithm.java
+ *
  * An implemetation of the Kuhn–Munkres assignment algorithm of the year 1957.
  * https://en.wikipedia.org/wiki/Hungarian_algorithm
- *
- *
  * @author https://github.com/aalmi | march 2014
  * @version 1.0
  */
