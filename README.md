@@ -12,20 +12,10 @@ DWGraph_Algo - implements the dw_graph_algorithms interface, which allows perfor
 The graph was realized by using HashMap data structures, and the operations were written by realizing Diexera algorithm (please see explanation in the algorithm itself). <br />
 <ins>Second part</ins> - this part uses the structure and the algorithms that were developed in part one, to realize the "Pokemon Challenge" game, which is beeing played against server.
 
-In order to run the game follow the nex steps:
-1. First use git clone:
-  $ git clone https://github.com/Yuval-Moshe/EX2.git
-2. //need to add a GUI, then explanation how to use.
-    . <br />
-    . <br />
-    . <br />
-   A login window will pop up - you should enter your login id.
-3. After choosing a level (between 0-23) - a visual graph will be shown, there you will be able to follow the agents, the pokemons and their movements (full game explanation is on the Wiki) 
-
-
-
-
-
+## How to run
+In order to gain more specific imformation on how to run this project please view the attached wiki pages:
+- [How to run - First Part](https://github.com/Yuval-Moshe/Ex2/wiki/How-To-Run---Weighted-&-Directed-Graph)
+- [How to run - Second Part](https://github.com/Yuval-Moshe/Ex2/wiki/How-To-Run---Pokemon-Game)
 
 ##### Definitions
  * *directed graph - a set of nodes that are connected together, where all the edges are directed from one vertex to another
