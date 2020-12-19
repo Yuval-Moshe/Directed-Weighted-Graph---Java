@@ -43,21 +43,21 @@ public class DWGraph_DS implements directed_weighted_graph {
     * @param other graph
     * **/
    public DWGraph_DS(directed_weighted_graph other){
-        for (node_data node : other.getV()){
-            _nodes.put(node.getKey(), node);
-            HashMap<Integer, edge_data> curr_edges_fromTo = new HashMap<>();
+       _nodes = new HashMap<Integer, node_data>();
+       _edges_fromNode = new HashMap<Integer, HashMap<Integer, edge_data>>();
+       _edges_toNode = new HashMap<Integer, HashMap<Integer, edge_data>>();
+       for (node_data node : other.getV()) {
+           _nodes.put(node.getKey(), node);
+           HashMap<Integer, edge_data> curr_edges_fromTo = new HashMap<>();
+           HashMap<Integer, edge_data> curr_edges_toFrom = new HashMap<>();
+           _edges_fromNode.put(node.getKey(),curr_edges_fromTo);
+           _edges_toNode.put(node.getKey(), curr_edges_toFrom);
+       }
+       for (node_data node : other.getV()){
             for (edge_data edge : other.getE(node.getKey())) {
-                curr_edges_fromTo.put(edge.getDest(),edge);
-                if(_edges_toNode.get(edge.getDest())==null){
-                    HashMap<Integer, edge_data> dest_edges_toFrom = new HashMap<>();
-                    dest_edges_toFrom.put(node.getKey(),edge);
-                    _edges_toNode.put(edge.getDest(), dest_edges_toFrom);
-                }
-                else{
-                    _edges_toNode.get(edge.getDest()).put(node.getKey(),edge);
-                }
+                _edges_fromNode.get(edge.getSrc()).put(edge.getDest(),edge);
+                _edges_toNode.get(edge.getDest()).put(edge.getSrc(), edge);
             }
-            _edges_fromNode.put(node.getKey(), curr_edges_fromTo);
         }
         _edgeSize = other.edgeSize();
         _mc = 0;
@@ -235,5 +235,20 @@ public class DWGraph_DS implements directed_weighted_graph {
     @Override
     public int getMC() {
         return _mc;
+    }
+    public boolean equals(Object o) {
+        directed_weighted_graph graph = (directed_weighted_graph) o;
+        if (this._edgeSize != graph.edgeSize() || this.nodeSize() != graph.nodeSize()) {
+            return false;
+        }
+
+        for (Integer key : this._nodes.keySet()) {
+            for (Integer key2 : this._edges_fromNode.get(key).keySet()){
+                if (graph.getEdge(key,key2)==null) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

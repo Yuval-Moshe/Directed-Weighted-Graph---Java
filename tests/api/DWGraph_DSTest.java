@@ -1,3 +1,5 @@
+package api;
+
 import api.*;
 import org.junit.jupiter.api.Test;
 
@@ -6,21 +8,21 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-    /** Test Class for api.DWGraph_DS
-     * List of all the test in this Test class:
-     * basicFunctions():
-     *  - Test 1.1 - adding 100 nodes:   getNode(i)!=null, nodeSize()=100, edgeSize()=O;
-     *  - Test 1.2 - connect each node i with node i+1 (except for 99):   edgeSize()=99, hasEdge(i,i+1)!=null, hasEdge(i+1,i)==null;
-     *  - Test 1.3 - removing edge between 2 connected nodes:   edgeSize()=98, hasEdge()==null;
-     *  - Test 1.4 - trying to remove an edge between 2 unconnected nodes, should not change anything:  edgeSize()=98, mc_beforeChange == mc_afterChange;
-     *  - Test 1.5 - trying to remove an edge from a->b when a and b are connected only from b->a: edgeSize()=98, mc_beforeChange == mc_afterChange;
-     *  - Test 1.6 - removing node 80:   getEdge(79,80)==null, getEdge(80,81)==null;
-     * connections():
-     *  - Test 2.1 - create an edge from i->10 for each i<10, and an edge from 10->i for each i>10:   getE(10).containsAll(edge(10,i))==true, for each i>10;
-     *  - Test 2.2 - remove an edge from 10->16:   getE(10).containsAll(edge(10,i))==false, for each i>10;
-     *  - Test 2.3 - remove node 10, no edges should be from or to 10. for each i<10 getEdge(i,10)==null, for each i>10 getEdge(10,i)==null,
-     * **/
-public class DWGraph_DS_Test {
+/** Test Class for api.DWGraph_DS
+ * List of all the test in this Test class:
+ * basicFunctions():
+ *  - Test 1.1 - adding 100 nodes:   getNode(i)!=null, nodeSize()=100, edgeSize()=O;
+ *  - Test 1.2 - connect each node i with node i+1 (except for 99):   edgeSize()=99, hasEdge(i,i+1)!=null, hasEdge(i+1,i)==null;
+ *  - Test 1.3 - removing edge between 2 connected nodes:   edgeSize()=98, hasEdge()==null;
+ *  - Test 1.4 - trying to remove an edge between 2 unconnected nodes, should not change anything:  edgeSize()=98, mc_beforeChange == mc_afterChange;
+ *  - Test 1.5 - trying to remove an edge from a->b when a and b are connected only from b->a: edgeSize()=98, mc_beforeChange == mc_afterChange;
+ *  - Test 1.6 - removing node 80:   getEdge(79,80)==null, getEdge(80,81)==null;
+ * connections():
+ *  - Test 2.1 - create an edge from i->10 for each i<10, and an edge from 10->i for each i>10:   getE(10).containsAll(edge(10,i))==true, for each i>10;
+ *  - Test 2.2 - remove an edge from 10->16:   getE(10).containsAll(edge(10,i))==false, for each i>10;
+ *  - Test 2.3 - remove node 10, no edges should be from or to 10. for each i<10 getEdge(i,10)==null, for each i>10 getEdge(10,i)==null,
+ * **/
+public class DWGraph_DSTest {
 
     @Test
     public void basicFunctions(){
@@ -83,48 +85,51 @@ public class DWGraph_DS_Test {
 
     @Test
     public void connections(){
-        directed_weighted_graph DWG = new DWGraph_DS();
+        directed_weighted_graph dwg = new DWGraph_DS();
         ArrayList<edge_data> comp = new ArrayList<>();
         boolean flag;
-
+        int first_key=0;
         for(int i=0; i<20; i++){
             node_data curr = new NodeData();
-            DWG.addNode(curr);
+            dwg.addNode(curr);
+            if(i==0){
+                first_key = dwg.getV().iterator().next().getKey();
+            }
         }
 
         //Test 2.1//
         for(int i=0; i<20; i++){
             if(i<10){
-                DWG.connect(i,10, 5);
+                dwg.connect(first_key+i,first_key+10, 5);
             }
             else if(i>10){
-                DWG.connect(10,i, 4);
-                edge_data edge = DWG.getEdge(10,i);
+                dwg.connect(first_key+10,first_key+i, 4);
+                edge_data edge = dwg.getEdge(first_key+10,first_key+i);
                 comp.add(edge);
             }
         }
-        Collection<edge_data> edges = DWG.getE(10);
+        Collection<edge_data> edges = dwg.getE(first_key+10);
         flag = true;
         flag &= edges.containsAll(comp);
         flag &= comp.containsAll(edges);
         assertTrue(flag);
 
         //Test2.2//
-        DWG.removeEdge(10, 16);
+        dwg.removeEdge(first_key+10, first_key+16);
         flag = true;
         flag &= edges.containsAll(comp);
         flag &= comp.containsAll(edges);
         assertFalse(flag);
 
         //Test 2.3//
-        DWG.removeNode(10);
+        dwg.removeNode(first_key+10);
         flag = true;
         for(int i=0; i<20; i++){
             if(i<10){
-                flag &= (DWG.getEdge(i,10)==null);
+                flag &= (dwg.getEdge(first_key+i,first_key+10)==null);
             }
             else if(i>10){
-                flag &= (DWG.getEdge(10,i)==null);
+                flag &= (dwg.getEdge(first_key+10,first_key+i)==null);
             }
         }
         assertTrue(flag);
