@@ -4,16 +4,13 @@ import api.directed_weighted_graph;
 import api.edge_data;
 import api.geo_location;
 import api.node_data;
-import com.google.gson.JsonObject;
 import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
 import gameClient.util.Range2Range;
-import okhttp3.internal.Internal;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -34,8 +31,7 @@ public class MyFrame extends JFrame{
     private HashMap<Integer, Double> _agents_score = new HashMap<>();
 
     /**
-     * ??
-     * @param a
+     * Constructor
      */
     MyFrame(String a) {
         super(a);
@@ -66,8 +62,7 @@ public class MyFrame extends JFrame{
         drawPokemons(g);
         drawAgents(g);
         drawInfo(g,_id,_scenario, _time);
-        updateFrame(); //makes the frame resizable
-
+        updateFrame();
     }
 
     /**
@@ -90,7 +85,6 @@ public class MyFrame extends JFrame{
             i++;
         }
     }
-
 
     /**
      * This method makes the graph visual, it goes over all nodes and edges in the graph, and
@@ -283,6 +277,4 @@ public class MyFrame extends JFrame{
             e.printStackTrace();
         }
     }
-
-
 }

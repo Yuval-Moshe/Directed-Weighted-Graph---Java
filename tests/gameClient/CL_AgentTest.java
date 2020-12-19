@@ -1,8 +1,6 @@
 package gameClient;
 
 import api.*;
-import com.google.gson.JsonObject;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;

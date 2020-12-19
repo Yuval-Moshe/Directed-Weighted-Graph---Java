@@ -2,6 +2,7 @@ package gameClient;
 
 import Server.Game_Server_Ex2;
 import api.*;
+import gameClient.util.HungarianAlgorithm;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +39,7 @@ public class Ex2 implements Runnable{
         if(args.length==0) {
             _flag=true;
         }
-        else{ //array length supposed to be 2, if not - will take two first elments in the arrayx
+        else{ //array length supposed to be 2, if not - will take two first elements in the array
             _flag=false;
             _id=Long.parseLong(args[0]);
             _scenario=Integer.parseInt(args[1]);
@@ -55,7 +56,7 @@ public class Ex2 implements Runnable{
     @Override
     public void run() {
         if(_flag) {
-            ImageIcon icon = new ImageIcon("pokemon_image1.png");
+            ImageIcon icon = new ImageIcon("data\\pokemon_image1.png");
             _id = Long.parseLong((String) JOptionPane.showInputDialog(null, "Insert your ID", "Pokemon Game", JOptionPane.INFORMATION_MESSAGE, icon,null,""));
             _scenario = Integer.parseInt((String) JOptionPane.showInputDialog(_frame, "Choose Level", "Pokemon Game", JOptionPane.QUESTION_MESSAGE, icon, null,""));
         }
@@ -138,7 +139,6 @@ public class Ex2 implements Runnable{
                     JSONObject agent_line = agents_json.getJSONObject(j).getJSONObject("Agent");
                     if(agent_line.getInt("id")==curr_agent_id){
                         curr_agent.update(agents_json.getJSONObject(j).toString());
-                        System.out.println(agents_json.getJSONObject(j).toString());
                     }
                 }
             }
@@ -353,9 +353,6 @@ public class Ex2 implements Runnable{
         catch (JSONException e) {e.printStackTrace();}
         }
 
-    /**
-     * This class is a comparator that checks the number of pokemons in smallest ragne (meaning below avg_dist).
-     */
     private class ConnectionsComparator implements Comparator<Integer>{
         HashMap<Integer, Integer> _num_of_pokemons_bellow_avg;
         HashMap<Integer, Double> _avg_dist_from_all_pokemons;

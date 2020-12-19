@@ -184,12 +184,4 @@ public class CL_Agent{
         return toJSON();
     }
 
-    public boolean isMoving() {
-        return this._curr_edge != null;
-    }
-
-    public String toString1() {
-        String ans = "" + this.getID() + "," + _pos + ", " + isMoving() + "," + this.getValue();
-        return ans;
-    }
 }

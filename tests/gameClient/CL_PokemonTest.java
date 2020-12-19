@@ -3,9 +3,6 @@ package gameClient;
 import api.*;
 import gameClient.util.Point3D;
 import org.junit.jupiter.api.Test;
-
-import java.awt.print.Pageable;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

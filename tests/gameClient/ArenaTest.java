@@ -2,10 +2,6 @@ package gameClient;
 
 import api.*;
 import gameClient.util.Point3D;
-import gameClient.util.Range2D;
-import gameClient.util.Range2Range;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
