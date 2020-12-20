@@ -46,13 +46,13 @@ public class Ex2 implements Runnable{
         }
         Thread client = new Thread(new Ex2());
         client.start();
-        }
+    }
 
     /**
      * The main method that runs the game till time ends.
      * In this method, if _flag is true, means that no data was provided from cmd, so the user needs to insert his id and
      * scenario number manually. After this, the game starts and graph(including all agents and pokemons movements) will be shown.
-      */
+     */
     @Override
     public void run() {
         if(_flag) {
@@ -74,7 +74,7 @@ public class Ex2 implements Runnable{
 
         while(game.isRunning()) {
             _frame.set_time(game.timeToEnd());
-           moveAgants(game, agents_list);
+            moveAgents(game, agents_list);
             try {
                 _frame.repaint();
                 Thread.sleep(_dt);
@@ -116,16 +116,14 @@ public class Ex2 implements Runnable{
      * @param agents_list
      * @return
      */
-    private static void moveAgants(game_service game, List<CL_Agent> agents_list) {
+    private static void moveAgents(game_service game, List<CL_Agent> agents_list) {
         String move = game.move();
         _frame.set_agents_score(move);
         directed_weighted_graph graph = _arena.getGraph();
         _arena.setAgents(agents_list);
         String pokemons_string = game.getPokemons();
-        List<CL_Pokemon> pokemons_list = Arena.json2Pokemons(pokemons_string);
-        _arena.setPokemons(pokemons_list);
-        int agents_size = agents_list.size();
-        int pokemons_size = pokemons_list.size();
+        List<CL_Pokemon> pokemons_list_pre = Arena.json2Pokemons(pokemons_string);
+        _arena.setPokemons(pokemons_list_pre);
         dw_graph_algorithms dwg = new DWGraph_Algo();
         dwg.init(graph);
         JSONObject json_game = null;
@@ -149,6 +147,16 @@ public class Ex2 implements Runnable{
         for (int a = 0; a < _arena.getPokemons().size(); a++) {
             gameClient.Arena.updateEdge(_arena.getPokemons().get(a), graph);
         }
+        List<CL_Pokemon> pokemons_list = new ArrayList<>();
+        for(int i=0; i<pokemons_list_pre.size(); i++){
+            CL_Pokemon pokemon = pokemons_list_pre.get(i);
+            int pok_des = pokemon.get_edge().getDest();
+            if(!(_arena.getGraph().getE(pok_des).isEmpty())){
+                pokemons_list.add(pokemon);
+            }
+        }
+        int pokemons_size = pokemons_list.size();
+        int agents_size = agents_list.size();
         double[][] matrix = new double[agents_size][pokemons_size];
         for (int a = 0; a < matrix.length; a++) {
             int agent_src = agents_list.get(a).getSrcNode();
@@ -168,8 +176,8 @@ public class Ex2 implements Runnable{
                 else{
                     matrix_2d[i][j]=0;
                 }
-                }
             }
+        }
         boolean flag = false;
         HungarianAlgorithm ha = new HungarianAlgorithm(matrix_2d);
         int [][] optimal = ha.findOptimalAssignment();
@@ -351,7 +359,7 @@ public class Ex2 implements Runnable{
 
         }
         catch (JSONException e) {e.printStackTrace();}
-        }
+    }
 
     private class ConnectionsComparator implements Comparator<Integer>{
         HashMap<Integer, Integer> _num_of_pokemons_bellow_avg;

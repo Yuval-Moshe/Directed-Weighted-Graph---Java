@@ -53,15 +53,18 @@ public class MyFrame extends JFrame{
      * This method is responsible for making all updates in the graph to be shown in the frame, by
      * using all other draw methods (drawGraph, drawPokemons, drawAgents and drawInfo).
      * @param g
+     * @return
      */
     public void paint(Graphics g) {
-        int w = this.getWidth();
-        int h = this.getHeight();
-        g.clearRect(0, 0, w, h);
-        drawGraph(g);
-        drawPokemons(g);
-        drawAgents(g);
-        drawInfo(g,_id,_scenario, _time);
+        int width = this.getWidth();
+        int height = this.getHeight();
+        Image background = createImage(width,height);
+        Graphics backgroundGraphics = background.getGraphics();
+        drawGraph(backgroundGraphics);
+        drawPokemons(backgroundGraphics);
+        drawAgents(backgroundGraphics);
+        drawInfo(backgroundGraphics,_id,_scenario, _time);
+        g.drawImage(background,0 ,0, this);
         updateFrame();
     }
 
