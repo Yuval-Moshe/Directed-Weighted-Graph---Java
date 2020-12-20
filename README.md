@@ -5,8 +5,8 @@
 This project is divided into 2 parts:<br />
 
 <ins>First part</ins> - Implementation of an directed weighted graph with the following classes: <br />
-NodeData - implements the node_data interface, which is the interface of nodes in an undirected weighted graph. <br />
-EdgeData - implements the edge_data interface, which is the interface of edges in an undirected weighted graph. <br />
+NodeData - implements the node_data interface, which is the interface of nodes in an directed weighted graph. <br />
+EdgeData - implements the edge_data interface, which is the interface of edges in an directed weighted graph. <br />
 DWGraph_DS - implements the directed_weighted_graph interface, which represents the graph itself. <br />
 DWGraph_Algo - implements the dw_graph_algorithms interface, which allows performing algorithmic queries on a specific graph. <br />
 The graph was realized by using HashMap data structures, and the operations were written by realizing Diexera algorithm (please see explanation in the algorithm itself). <br />
@@ -19,7 +19,7 @@ In order to gain more specific imformation on how to run this project please vie
 
 ## Definitions
  * *directed graph - a set of nodes that are connected together, where all the edges are directed from one vertex to another*
- * *weighted graph - edges have weight*
+ * *weighted graph - edges of the graph are holding some sort of cost (time to cross for example)
  
 ## Example:
  
