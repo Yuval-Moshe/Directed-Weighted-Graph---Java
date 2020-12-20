@@ -19,7 +19,7 @@ In order to gain more specific imformation on how to run this project please vie
 
 ## Definitions
  * *directed graph - a set of nodes that are connected together, where all the edges are directed from one vertex to another*
- * *weighted graph - edges of the graph are holding some sort of cost (time to cross for example)
+ * *weighted graph - edges of the graph are holding some sort of cost (time to cross for example)*
  
 ## Example:
  
