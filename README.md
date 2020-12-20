@@ -4,7 +4,7 @@
 
 This project is divided into 2 parts:<br />
 
-<ins>First part</ins> - Implementation of an undirected weighted graph with the following classes: <br />
+<ins>First part</ins> - Implementation of an directed weighted graph with the following classes: <br />
 NodeData - implements the node_data interface, which is the interface of nodes in an undirected weighted graph. <br />
 EdgeData - implements the edge_data interface, which is the interface of edges in an undirected weighted graph. <br />
 DWGraph_DS - implements the directed_weighted_graph interface, which represents the graph itself. <br />
