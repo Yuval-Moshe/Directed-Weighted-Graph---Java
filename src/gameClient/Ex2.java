@@ -115,6 +115,7 @@ public class Ex2 implements Runnable{
      * @param game
      * @param agents_list
      * @return
+     *
      */
     private static void moveAgents(game_service game, List<CL_Agent> agents_list) {
         String move = game.move();

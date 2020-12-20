@@ -75,6 +75,7 @@ public class MyFrame extends JFrame{
      * @param id - user id
      * @param game_level - current level
      * @param time - how many milliseconds left till the end of the level
+     *
      */
     private void drawInfo(Graphics g, long id, int game_level, long time) {
         g.setColor( new Color(253, 251, 251, 255) );
